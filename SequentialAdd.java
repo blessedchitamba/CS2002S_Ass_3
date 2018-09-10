@@ -9,7 +9,7 @@ import java.io.File;
 
 public class SequentialAdd {
    private static float[][] terrain;
-   private static String inputFileName = "test_inp.txt";
+   private static String inputFileName = "sample_input.txt";
    private static String outputFileName = "test_outp.txt";
    private static int xTerrainSize;
    private static int yTerrainSize;
@@ -47,8 +47,8 @@ public class SequentialAdd {
             grandTotal = 0;
             
             while(counter<=numTrees) {
-               treeXindex = scanner.nextInt();
                treeYindex = scanner.nextInt();
+               treeXindex = scanner.nextInt();
                extension = scanner.nextInt();
                treeTotal = 0;
                
@@ -67,7 +67,7 @@ public class SequentialAdd {
                           grandTotal += terrain[i][j];
                        }
                   }
-               } else if (treeXindex+extension > xTerrainSize) {
+               } else if (treeXindex+extension > xTerrainSize && treeYindex+extension < yTerrainSize) {
                      for(int i=treeYindex; i < treeYindex+extension; i++){
                        for(int j=treeXindex; j < xTerrainSize; j++){ 
                           treeTotal += terrain[i][j];
