@@ -15,7 +15,7 @@ public class SequentialAdd {
    private static int yTerrainSize;
    private static int counter;
    private static int numTrees;
-   private static int treeXindex, treeYindex, extension;
+   private static int treeXindex, treeYindex, extension, treeXend, treeYend;
    private static float treeTotal, grandTotal;
    private static float[] totals;
    
@@ -50,38 +50,24 @@ public class SequentialAdd {
                treeYindex = scanner.nextInt();
                treeXindex = scanner.nextInt();
                extension = scanner.nextInt();
+               treeXend = treeXindex+extension;
+               treeYend = treeYindex+extension;
+               
+               //deal with the different cases of trees extending beyond the terrain size
+               if (treeXend > xTerrainSize){
+                  treeXend = xTerrainSize;
+               }
+               if (treeYend > yTerrainSize){
+                  treeYend = yTerrainSize;
+               }
                treeTotal = 0;
                
-               //deal with the 4 different cases of trees extending beyond the terrain size
-               if(treeXindex+extension < xTerrainSize && treeYindex+extension < yTerrainSize) {
-                  for(int i=treeYindex; i < treeYindex+extension; i++){
-                    for(int j=treeXindex; j < treeXindex+extension; j++){ 
+                  for(int i=treeYindex; i < treeYend; i++){
+                    for(int j=treeXindex; j < treeXend; j++){ 
                        treeTotal += terrain[i][j];
                        grandTotal += terrain[i][j];
                     }
                   }
-               } else if (treeXindex+extension > xTerrainSize && treeYindex+extension > yTerrainSize) {
-                    for(int i=treeYindex; i < yTerrainSize; i++){
-                       for(int j=treeXindex; j < xTerrainSize; j++){ 
-                          treeTotal += terrain[i][j];
-                          grandTotal += terrain[i][j];
-                       }
-                  }
-               } else if (treeXindex+extension > xTerrainSize && treeYindex+extension < yTerrainSize) {
-                     for(int i=treeYindex; i < treeYindex+extension; i++){
-                       for(int j=treeXindex; j < xTerrainSize; j++){ 
-                          treeTotal += terrain[i][j];
-                          grandTotal += terrain[i][j];
-                       }
-                  }
-               } else {
-                     for(int i=treeYindex; i < yTerrainSize; i++){
-                       for(int j=treeXindex; j < treeXindex+extension; j++){ 
-                          treeTotal += terrain[i][j];
-                          grandTotal += terrain[i][j];
-                       }
-                  }
-               }
                
                //add the total to totals[] and increment counter
                totals[counter-1] = treeTotal;
