@@ -16,12 +16,11 @@ public class SequentialAdd {
    private static int counter;
    private static int numTrees;
    private static int treeXindex, treeYindex, extension, treeXend, treeYend;
-   private static float treeTotal, grandTotal;
+   private static float treeTotal;
+   private static double grandTotal;
    private static float[] totals;
    
    public static void main(String[] args) throws FileNotFoundException {
-            //record the start time of the program execution
-            long startTime = System.currentTimeMillis();
             
             File input = new File(inputFileName);
             Scanner scanner = new Scanner(input);
@@ -36,6 +35,9 @@ public class SequentialAdd {
                   terrain[i][j] = scanner.nextFloat();
                }
             }   
+            
+            //record the start time of the program execution
+            long startTime = System.currentTimeMillis();
             
             //deal with the trees now. take number of trees and initialize totals[]
             numTrees = scanner.nextInt();
@@ -65,7 +67,7 @@ public class SequentialAdd {
                   for(int i=treeYindex; i < treeYend; i++){
                     for(int j=treeXindex; j < treeXend; j++){ 
                        treeTotal += terrain[i][j];
-                       grandTotal += terrain[i][j];
+                       grandTotal += (double)terrain[i][j];
                     }
                   }
                
@@ -74,22 +76,24 @@ public class SequentialAdd {
                counter++;
             } //end of while loop
             
+            //record elapsed time
+            long elapsedTime = System.currentTimeMillis() - startTime;
+            System.out.println("Time taken while adding: "+elapsedTime+" millisec.");
+            
             //write things to file
             try {
                writeToFile(totals);
             }
             catch (IOException e){}
                         
-            //record elapsed time
-            long elapsedTime = System.currentTimeMillis() - startTime;
-            System.out.println("Time taken while executing: "+elapsedTime+" millisec.");
+            
       } //end of main method
       
       public static void writeToFile(float[] array) throws IOException {
          FileWriter writer = new FileWriter(outputFileName, true);
          BufferedWriter bf = new BufferedWriter(writer);
          
-         bf.write(Float.toString(grandTotal/numTrees));
+         bf.write(Double.toString(grandTotal/numTrees));
          bf.newLine();
          bf.write(Integer.toString(numTrees));
          bf.newLine();
