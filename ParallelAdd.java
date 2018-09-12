@@ -61,6 +61,7 @@ public class ParallelAdd {
       
       //deal with the trees now. take number of trees and initialize totals[]
       numTrees = scanner.nextInt();
+      scanner.nextLine();
       totals = new float[numTrees];
       
       //load trees into trees array from file
