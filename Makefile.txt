@@ -1,6 +1,6 @@
-# HelloWorld program makefile
-# Hussein Suleman
-# 26 February 2018
+# CS2002S Assignment 3 makefile
+# Blessed Chitamba
+# 08 September 2018
 
 JAVAC=/usr/bin/javac
 .SUFFIXES: .java .class
@@ -11,7 +11,7 @@ BINDIR=bin
 $(BINDIR)/%.class:$(SRCDIR)/%.java
 	$(JAVAC) -d $(BINDIR)/ -cp $(BINDIR) $<
 
-CLASSES=HelloMessage.class HelloWorld.class
+CLASSES=TreeTotals.class ParallelAdd.class SequentialAdd.class
 CLASS_FILES=$(CLASSES:%.class=$(BINDIR)/%.class)
 
 default: $(CLASS_FILES)
