@@ -12,13 +12,12 @@ import java.util.concurrent.ForkJoinPool;
 
 public class ParallelAdd {
    private static float[][] terrain;
-   private static String inputFileName = "sample_input.txt";
-   private static String outputFileName = "parallel_output.txt";
+   private static String inputFileName;
+   private static String outputFileName;
    private static int xTerrainSize;
    private static int yTerrainSize;
    private static int counter;
    private static int numTrees;
-   private static int multiplier;
    private static int treeXindex, treeYindex, extension, treeXend, treeYend;
    private static float treeTotal;
    private static double grandTotal;
@@ -38,30 +37,42 @@ public class ParallelAdd {
    
    //method that makes use of ForkJoin Pool
    public static double totalSunlight(String[] t) {
-      return fjPool.invoke(new TreeTotals(t, terrain, totals, xTerrainSize, yTerrainSize, 0, t.length, multiplier));
+      return fjPool.invoke(new TreeTotals(t, terrain, totals, xTerrainSize, yTerrainSize, 0, t.length));
    }
    
    //main method
    public static void main(String[] args) throws FileNotFoundException {
+      
+      //check if command line argument is empty
+      if(args.length!=0) {
+         inputFileName = args[0];
+         outputFileName = args[1];
+      }
+      else {
+         inputFileName = "sample_input.txt";
+         outputFileName = "parallel_output.txt";
+      }
+      
+      //read contents from file
       File input = new File(inputFileName);
       Scanner scanner = new Scanner(input);
-
+           
       String[] firstLine = scanner.nextLine().split(" ");
       xTerrainSize = Integer.parseInt(firstLine[0]); yTerrainSize = Integer.parseInt(firstLine[1]);
-
+      
       //load the terrain matrix
       terrain = new float[xTerrainSize][yTerrainSize];
       for (int i=0; i<yTerrainSize; i++){
          for (int j=0; j<xTerrainSize; j++) {
             terrain[i][j] = scanner.nextFloat();
          }
-      }
-
+      }   
+            
       //deal with the trees now. take number of trees and initialize totals[]
       numTrees = scanner.nextInt();
       scanner.nextLine();
       totals = new float[numTrees];
-
+      
       //load trees into trees array from file
       trees = new String[numTrees];
       counter=0;
@@ -70,40 +81,17 @@ public class ParallelAdd {
          counter++;
       }
       
-      float sumTime;
-      float time;
-      //grandTotal=0;
-
-      //loop to vary the multiplier
-      for(int m=1; m<51; m++) {
-         sumTime=0;
-         multiplier = 1;
-         grandTotal = 0;
-         // String[] sub = Arrays.copyOfRange(trees, 0, 100000*m);
-//          float[] totals = new float[100000*m];
-         
-         //warm up runs
-         for(int j=0; j<5; j++) {
-           grandTotal = totalSunlight(trees);
-         }
-   
-         //do  multiple runs of the parallel add
-         for(int i=1; i<11; i++) {
-           //call upon the method do start the multithreading and assign the returned value to the grandTotal var
-           tick();
-           grandTotal = totalSunlight(trees);
-           time = tock();
-           sumTime += time;
-         }
-           System.out.println(m+" "+(sumTime/10)+" "+m*100);
-      }
-
+      //call upon the method do start the multithreading and assign the returned value to the grandTotal var
+      tick();
+      grandTotal = totalSunlight(trees);
+      float time = tock();
+      System.out.println("Parallel program: The addition took "+time+"seconds with SQC=500.");
 
       //write things to file
-      // try {
-//          writeToFile(totals);
-//       }
-//       catch (IOException e){}
+      try {
+         writeToFile(totals);
+      }
+      catch (IOException e){}
                   
             
    } //end of main method      

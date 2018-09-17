@@ -9,8 +9,8 @@ import java.io.File;
 
 public class SequentialAdd {
    private static float[][] terrain;
-   private static String inputFileName = "sample_input.txt";
-   private static String outputFileName = "test_outp.txt";
+   private static String inputFileName;
+   private static String outputFileName;
    private static int xTerrainSize;
    private static int yTerrainSize;
    private static int counter;
@@ -31,7 +31,18 @@ public class SequentialAdd {
 	}
    
    public static void main(String[] args) throws FileNotFoundException {
+   
+            //check if command line argument is empty
+            if(args.length!=0) {
+               inputFileName = args[0];
+               outputFileName = args[1];
+            }
+            else {
+               inputFileName = "sample_input.txt";
+               outputFileName = "sequential_output.txt";
+            }
             
+            //open file to read contents
             File input = new File(inputFileName);
             Scanner scanner = new Scanner(input);
                  
@@ -103,10 +114,10 @@ public class SequentialAdd {
             System.out.println("Sequential program: Time taken while adding is "+time+" seconds.");
             
             // //write things to file
-//             try {
-//                writeToFile(totals);
-//             }
-//             catch (IOException e){}
+            try {
+               writeToFile(totals);
+            }
+            catch (IOException e){}
                         
             
       } //end of main method

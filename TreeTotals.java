@@ -10,17 +10,15 @@ public class TreeTotals extends RecursiveTask<Double> {
    String[] tempArr;
    private int xTerrainSize;
    private int yTerrainSize;
-   private int multiplier;
    private int treeXindex, treeYindex, extension, treeXend, treeYend;
-   static final int SEQUENTIAL_CUTOFF=100;
+   static final int SEQUENTIAL_CUTOFF=500;
    
    //constructor: needs the String[] array of tree coordinates, terrain, float[] totals to populate,
       //terrain sizes, and low and high indexes to reference in the String[] array
-   TreeTotals(String[] t, float[][] ter, float[] tot, int xTerrainSize, int yTerrainSize, int lo, int hi, int mult) {
+   TreeTotals(String[] t, float[][] ter, float[] tot, int xTerrainSize, int yTerrainSize, int lo, int hi) {
       trees = t;
       terrain = ter;
       totals = tot;
-      multiplier = mult;
       low = lo;
       high = hi;
       this.xTerrainSize = xTerrainSize;
@@ -29,14 +27,14 @@ public class TreeTotals extends RecursiveTask<Double> {
    
    //overriding compute()
    protected Double compute() {
-      if((high-low) < (multiplier*SEQUENTIAL_CUTOFF)) {
+      if((high-low) < SEQUENTIAL_CUTOFF) {
          double ans = computeSequentially(trees, high, low);
          return ans;
       }
       else {
          //recursively create two parallel threads
-         TreeTotals left = new TreeTotals(trees, terrain, totals, xTerrainSize, yTerrainSize, low, (high+low)/2, multiplier);
-         TreeTotals right = new TreeTotals(trees, terrain, totals, xTerrainSize, yTerrainSize, (high+low)/2, high, multiplier);
+         TreeTotals left = new TreeTotals(trees, terrain, totals, xTerrainSize, yTerrainSize, low, (high+low)/2);
+         TreeTotals right = new TreeTotals(trees, terrain, totals, xTerrainSize, yTerrainSize, (high+low)/2, high);
          
          left.fork();  //send left thread to do its work independently. fork() is equivalent to start()
 			double rightAns = right.compute();   //let this thread do the work in the right path. compute()<=>run()
