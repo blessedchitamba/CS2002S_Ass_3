@@ -18,7 +18,17 @@ public class SequentialAdd {
    private static int treeXindex, treeYindex, extension, treeXend, treeYend;
    private static float treeTotal;
    private static double grandTotal;
+   private static String[] tempArr, trees;
    private static float[] totals;
+   
+   //methods to deal with the time measuring
+   static long startTime = 0;
+   private static void tick(){
+		startTime = System.currentTimeMillis();
+	}
+   private static float tock(){
+		return (System.currentTimeMillis() - startTime) / 1000.0f; 
+	}
    
    public static void main(String[] args) throws FileNotFoundException {
             
@@ -35,26 +45,38 @@ public class SequentialAdd {
                   terrain[i][j] = scanner.nextFloat();
                }
             }   
-            
-            //record the start time of the program execution
-            long startTime = System.currentTimeMillis();
-            
+                        
             //deal with the trees now. take number of trees and initialize totals[]
             numTrees = scanner.nextInt();
+            scanner.nextLine();
             totals = new float[numTrees];
+            
+            //load trees into trees array from file
+            trees = new String[numTrees];
+            counter=0;
+            while(counter<1000000) {
+               trees[counter] = scanner.nextLine().trim();
+               counter++;
+            }
+
             
             //calculate average sunlight for each tree
             counter = 1;
             treeTotal = 0;
             grandTotal = 0;
             
+            tick();
             while(counter<=numTrees) {
-               treeYindex = scanner.nextInt();
-               treeXindex = scanner.nextInt();
-               extension = scanner.nextInt();
-               treeXend = treeXindex+extension;
-               treeYend = treeYindex+extension;
+               //remember each array entry is a string in the form "Yindex Xindex Extension"
+               tempArr = trees[counter-1].split(" ");
                
+               //each tempArr represents each tree's coordinates. extract x and y as below
+               treeYindex = Integer.parseInt(tempArr[0]);
+               treeXindex = Integer.parseInt(tempArr[1]);
+               extension = Integer.parseInt(tempArr[2]);
+               treeXend = treeXindex+extension;
+               treeYend = treeYindex+extension;  
+                            
                //deal with the different cases of trees extending beyond the terrain size
                if (treeXend > xTerrainSize){
                   treeXend = xTerrainSize;
@@ -77,14 +99,14 @@ public class SequentialAdd {
             } //end of while loop
             
             //record elapsed time
-            long elapsedTime = System.currentTimeMillis() - startTime;
-            System.out.println("Time taken while adding: "+elapsedTime+" millisec.");
+            float time = tock();
+            System.out.println("Sequential program: Time taken while adding is "+time+" seconds.");
             
-            //write things to file
-            try {
-               writeToFile(totals);
-            }
-            catch (IOException e){}
+            // //write things to file
+//             try {
+//                writeToFile(totals);
+//             }
+//             catch (IOException e){}
                         
             
       } //end of main method
